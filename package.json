@@ -1,0 +1,7 @@
+{
+  "name": "idl-properties",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Victor Porof <victorporof@google.com>",
+  "license": "MIT"
+}
