@@ -1,7 +1,34 @@
 {
   "name": "idl-properties",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.mjs",
   "author": "Victor Porof <victorporof@google.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "clean": "mkdir -p spec && rm -rf spec/*",
+    "clone": "yarn clean && yarn clone:html && yarn clone:html-build && yarn clone:dom && yarn clone:uievents && yarn clone:pointerevents && yarn clone:cssom && yarn clone:aria",
+    "clone:html": "git -C spec clone https://github.com/whatwg/html.git",
+    "clone:html-build": "git -C spec clone https://github.com/whatwg/html-build.git",
+    "clone:dom": "git -C spec clone https://github.com/whatwg/dom.git",
+    "clone:uievents": "git -C spec clone https://github.com/w3c/uievents.git",
+    "clone:pointerevents": "git -C spec clone https://github.com/w3c/pointerevents.git",
+    "clone:cssom": "git -C spec clone https://github.com/w3c/csswg-drafts.git",
+    "clone:aria": "git -C spec clone https://github.com/w3c/aria.git",
+    "build": "yarn clone && yarn rebuild",
+    "rebuild": "yarn rebuild:html && yarn rebuild:dom && yarn rebuild:uievents && yarn rebuild:cssom",
+    "rebuild:html": "spec/html-build/build.sh",
+    "rebuild:dom": "make -C spec/dom",
+    "rebuild:uievents:prebikeshed": "pushd . && cd spec/uievents && ./build.py --includes-only && popd",
+    "rebuild:uievents:expand": "node build.mjs > spec/uievents.bs",
+    "rebuild:uievents:bikeshed": "curl https://api.csswg.org/bikeshed/ -F file=@spec/uievents.bs > spec/uievents/index.html",
+    "rebuild:uievents": "yarn rebuild:uievents:prebikeshed && yarn rebuild:uievents:expand && yarn rebuild:uievents:bikeshed",
+    "rebuild:cssom": "REMOTE=1 make -C spec/csswg-drafts/cssom-1",
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.21",
+    "prettier": "^2.5.1",
+    "puppeteer": "^13.1.1",
+    "webidl2": "^24.2.0"
+  }
 }
