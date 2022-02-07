@@ -1,26 +1,18 @@
-import { merge } from "lodash-es";
-import puppeteer from "puppeteer";
-import * as WebIDL2 from "webidl2";
-import * as Config from "./config.mjs";
-import * as Extract from "./extract.mjs";
-import * as Util from "./util.mjs";
+import { GLOBAL_ATTRIBUTES, VALID_PROPS_RULES } from "../config.mjs";
+import * as Util from "../util.mjs";
 
 // Attributes for interfaces, fields for dictionaries.
 const ACCEPTED_PROP_TYPES = new Set(["attribute", "field"]);
 
-export async function getAndTransformIDLs(specs, output = {}) {
-  const browser = await puppeteer.launch();
-  for (const spec of specs) {
-    const sources = await Extract.extractIDLSources(browser, spec);
-    const parsed = sources.map(WebIDL2.parse).flat();
-    transformIDLSources(parsed, output);
+export function getIDLProps(parsed, output = {}) {
+  for (const { input, idls } of parsed) {
+    transformIDLs({ input, idls }, output);
   }
-  applyRules(output, Config.VALID_PROPS_RULES);
-  browser.close();
+  applyRules(output, VALID_PROPS_RULES);
   return output;
 }
 
-function transformIDLSources(idls, output) {
+function transformIDLs({ input, idls }, output) {
   const makeIDLInfo = () => ({
     inherits: null,
     includes: [],
@@ -31,7 +23,7 @@ function transformIDLSources(idls, output) {
     switch (idl.type) {
       case "includes": {
         output[idl.target] ??= makeIDLInfo();
-        merge(output[idl.target], {
+        Util.merge(output[idl.target], {
           includes: [idl.includes],
         });
         break;
@@ -40,12 +32,19 @@ function transformIDLSources(idls, output) {
       case "interface mixin":
       case "dictionary": {
         output[idl.name] ??= makeIDLInfo();
-        merge(output[idl.name], {
+        Util.merge(output[idl.name], {
           inherits: idl.inheritance,
           props: Object.fromEntries(
             idl.members
               ?.filter((e) => ACCEPTED_PROP_TYPES.has(e.type))
-              .map((e) => [e.name, Util.getIDLTypes(e.idlType)])
+              .map((e) => [
+                e.name,
+                {
+                  global: GLOBAL_ATTRIBUTES.has(e.name),
+                  from: [input.name],
+                  type: Util.getIDLTypes(e.idlType),
+                },
+              ])
           ),
         });
         break;

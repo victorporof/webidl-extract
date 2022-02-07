@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "mkdir -p spec && rm -rf spec/*",
-    "clone": "yarn clean && yarn clone:html && yarn clone:html-build && yarn clone:dom && yarn clone:uievents && yarn clone:pointerevents && yarn clone:cssom && yarn clone:aria",
+    "clone": "yarn clean && yarn clone:html && yarn clone:html-build && yarn clone:dom && yarn clone:uievents && yarn clone:pointerevents && yarn clone:cssom && yarn clone:aria && yarn clone:chromium",
     "clone:html": "git -C spec clone https://github.com/whatwg/html.git",
     "clone:html-build": "git -C spec clone https://github.com/whatwg/html-build.git",
     "clone:dom": "git -C spec clone https://github.com/whatwg/dom.git",
@@ -14,6 +14,7 @@
     "clone:pointerevents": "git -C spec clone https://github.com/w3c/pointerevents.git",
     "clone:cssom": "git -C spec clone https://github.com/w3c/csswg-drafts.git",
     "clone:aria": "git -C spec clone https://github.com/w3c/aria.git",
+    "clone:blink": "git -C spec clone https://chromium.googlesource.com/chromium/blink.git",
     "build": "yarn clone && yarn rebuild",
     "rebuild": "yarn rebuild:html && yarn rebuild:dom && yarn rebuild:uievents && yarn rebuild:cssom",
     "rebuild:html": "spec/html-build/build.sh",
@@ -26,7 +27,7 @@
     "start": "node index.mjs"
   },
   "dependencies": {
-    "lodash-es": "^4.17.21",
+    "globby": "^13.1.1",
     "prettier": "^2.5.1",
     "puppeteer": "^13.1.1",
     "webidl2": "^24.2.0"
