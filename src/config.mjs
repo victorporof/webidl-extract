@@ -1,5 +1,5 @@
 export const GLOBAL_ATTRIBUTES = new Set([
-  // https://html.spec.whatwg.org/#global-attributes
+  // https://html.spec.whatwg.org/multipage/dom.html#global-attributes
   "accesskey",
   "autocapitalize",
   "autofocus",
