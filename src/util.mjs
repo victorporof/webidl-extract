@@ -1,3 +1,35 @@
+export function merge(a, b) {
+  if (a instanceof Array && b instanceof Array) {
+    mergeArrays(a, b);
+  } else if (isNonNullObject(a) && isNonNullObject(b)) {
+    mergeObjects(a, b);
+  } else {
+    throw Error;
+  }
+}
+
+export function isNonNullObject(value) {
+  return typeof value == "object" && value !== null;
+}
+
+export function mergeArrays(a, b) {
+  for (const value of b) {
+    if (!a.includes(value)) {
+      a.push(value);
+    }
+  }
+}
+
+export function mergeObjects(a, b) {
+  for (const key of Object.keys(b)) {
+    if (isNonNullObject(a[key]) && isNonNullObject(b[key])) {
+      merge(a[key], b[key]);
+    } else {
+      a[key] = b[key];
+    }
+  }
+}
+
 export function getIDLTypes(idl, types = []) {
   if (Array.isArray(idl.idlType)) {
     for (const subtype of idl.idlType) {

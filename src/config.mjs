@@ -1,3 +1,29 @@
+export const GLOBAL_ATTRIBUTES = new Set([
+  // https://html.spec.whatwg.org/#global-attributes
+  "accesskey",
+  "autocapitalize",
+  "autofocus",
+  "contenteditable",
+  "dir",
+  "draggable",
+  "enterkeyhint",
+  "hidden",
+  "inputmode",
+  "is",
+  "itemid",
+  "itemprop",
+  "itemref",
+  "itemscope",
+  "itemtype",
+  "lang",
+  "nonce",
+  "spellcheck",
+  "style",
+  "tabindex",
+  "title",
+  "translate",
+]);
+
 export const VALID_PROPS_RULES = {
   // https://html.spec.whatwg.org/multipage/input.html#input-type-attr-summary
   HTMLInputElement: {
