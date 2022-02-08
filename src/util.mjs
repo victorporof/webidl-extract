@@ -24,7 +24,7 @@ export function mergeObjects(a, b) {
   for (const key of Object.keys(b)) {
     if (isNonNullObject(a[key]) && isNonNullObject(b[key])) {
       merge(a[key], b[key]);
-    } else {
+    } else if (b[key] != null) {
       a[key] = b[key];
     }
   }
